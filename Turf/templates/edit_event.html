@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+{% load static %}
+
+<head>
+    <title>Edit Event</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <h1>✏️ Edit Event</h1>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <input type="text" name="title" value="{{ event.title }}">
+
+        <br><br>
+
+        <input type="date" name="event_date" value="{{ event.event_date|date:'Y-m-d' }}">
+
+        <br><br>
+
+        <input type="time" name="event_time" value="{{ event.event_time|time:'H:i' }}">
+
+        <br><br>
+
+        <input type="text" name="location" value="{{ event.location }}">
+
+        <br><br>
+
+        <input type="number" name="max_players" value="{{ event.max_players }}">
+
+        <br><br>
+
+        <button type="submit">
+            Save Changes
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

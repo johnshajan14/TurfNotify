@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+{% load static %}
+
+<head>
+    <title>Delete Event</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <h1>🗑 Delete Event</h1>
+
+    <p>
+        Are you sure you want to delete:
+    </p>
+
+    <h2>{{ event.title }}</h2>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <button type="submit">
+            Delete Event
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

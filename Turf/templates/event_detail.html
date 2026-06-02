@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+{% load static %}
+
+<head>
+    <title>Event Details</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <h1>{{ event.title }}</h1>
+
+    <p><strong>Date:</strong> {{ event.event_date }}</p>
+
+    <p><strong>Time:</strong> {{ event.event_time }}</p>
+
+    <p><strong>Location:</strong> {{ event.location }}</p>
+
+    <p><strong>Maximum Players:</strong> {{ event.max_players }}</p>
+
+    {% if request.user == event.created_by %}
+
+        <a href="/event/{{ event.id }}/edit/">
+            <button>
+                ✏️ Edit Event
+            </button>
+        </a>
+
+        <br><br>
+
+        <a href="/event/{{ event.id }}/delete/">
+            <button>
+                🗑 Delete Event
+            </button>
+        </a>
+
+    {% endif %}
+
+    <hr>
+
+    <h2>📊 Match Statistics</h2>
+
+    <p>👥 Confirmed: {{ confirmed_count }} / {{ event.max_players }}</p>
+
+    <p>💰 Paid: {{ paid_count }}</p>
+
+    <p>💸 Unpaid: {{ unpaid_count }}</p>
+
+    <p>❌ Declined: {{ declined_count }}</p>
+
+    <p>⏳ Spots Left: {{ spots_left }}</p>
+
+    {% if is_full %}
+        <div class="match-full">
+            🔒 MATCH FULL
+        </div>
+    {% endif %}
+
+    <hr>
+
+    {% if not is_full %}
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <label>
+            <input type="radio" name="response" value="YES">
+            YES
+        </label>
+
+        <br><br>
+
+        <label>
+            <input type="radio" name="response" value="NO">
+            NO
+        </label>
+
+        <br><br>
+
+        <textarea
+            name="reason"
+            placeholder="Reason if NO"></textarea>
+
+        <br><br>
+
+        <button type="submit">
+            Submit Response
+        </button>
+
+    </form>
+
+    {% else %}
+
+        <p><strong>No more player slots available.</strong></p>
+
+    {% endif %}
+
+    <hr>
+
+    <h2>Confirmed Players</h2>
+
+    {% for player in confirmed_players %}
+
+        <p>
+            ✅ {{ player.user.username }}
+
+            {% if player.is_paid %}
+                🟢 PAID
+            {% else %}
+                🔴 UNPAID
+            {% endif %}
+        </p>
+
+        {% if request.user == event.created_by %}
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <input
+                    type="hidden"
+                    name="payment_response_id"
+                    value="{{ player.id }}">
+
+                <button type="submit">
+
+                    {% if player.is_paid %}
+                        Mark Unpaid
+                    {% else %}
+                        Mark Paid
+                    {% endif %}
+
+                </button>
+
+            </form>
+
+        {% endif %}
+
+        <br>
+
+    {% empty %}
+
+        <p>No confirmed players yet.</p>
+
+    {% endfor %}
+
+    <hr>
+
+    <h2>Declined Players</h2>
+
+    {% for player in declined_players %}
+
+        <p>❌ {{ player.user.username }}</p>
+
+        <p>Reason: {{ player.reason }}</p>
+
+        <br>
+
+    {% empty %}
+
+        <p>No declined players.</p>
+
+    {% endfor %}
+
+</div>
+
+</body>
+
+</html>
+

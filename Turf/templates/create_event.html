@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+{% load static %}
+
+<head>
+    <title>Create Event</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <h1>⚽ Create Football Event</h1>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <input type="text"
+               name="title"
+               placeholder="Match Title">
+
+        <br><br>
+
+        <input type="date"
+               name="event_date">
+
+        <br><br>
+
+        <input type="time"
+               name="event_time">
+
+        <br><br>
+
+        <input type="text"
+               name="location"
+               placeholder="Location">
+
+        <br><br>
+
+        <input type="number"
+               name="max_players"
+               placeholder="Maximum Players">
+
+        <br><br>
+
+        <textarea
+            name="announcement"
+            placeholder="Announcement (optional)"></textarea>
+
+        <br><br>
+
+        <button type="submit">
+            Create Event
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>
+

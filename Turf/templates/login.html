@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+{% load static %}
+
+<head>
+    <title>TurfNotify Login</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <h1>⚽ TurfNotify</h1>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <label>Username:</label>
+            <input type="text" name="username" placeholder="Enter Username">
+            <br><br>
+
+            <label>Password:</label>
+            <input type="password" name="password" placeholder="Enter Password">
+            <br><br>
+
+            <button type="submit">Login</button>
+
+        </form>
+
+        <br><br>
+
+        <a href="/register/">Create Account</a>
+
+    </div>
+
+</body>
+</html>

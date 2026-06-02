@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+{% load static %}
+
+<head>
+    <title>TurfNotify Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <h1>⚽ TurfNotify</h1>
+
+    <h3>Welcome Back, {{ request.user.username }} 👋</h3>
+
+    <p>Ready for your next match?</p>
+
+    <br>
+
+    <a href="/create-event/">
+        <button>➕ Create Football Event</button>
+    </a>
+
+    <hr>
+
+    <h2>📅 Upcoming Events</h2>
+
+    {% for event in events %}
+
+        <div class="event-card">
+
+            <h3>⚽ {{ event.title }}</h3>
+
+            <p>📅 <strong>Date:</strong> {{ event.event_date }}</p>
+
+            <p>⏰ <strong>Time:</strong> {{ event.event_time }}</p>
+
+            <p>📍 <strong>Location:</strong> {{ event.location }}</p>
+
+            <p>👥 <strong>Maximum Players:</strong> {{ event.max_players }}</p>
+
+            <p>👤 <strong>Created By:</strong> {{ event.created_by.username }}</p>
+
+            <br>
+
+            <a href="/event/{{ event.id }}/">
+                <button>View Event</button>
+            </a>
+
+        </div>
+
+    {% empty %}
+
+        <div class="event-card">
+            <p>No events created yet.</p>
+        </div>
+
+    {% endfor %}
+
+    <hr>
+
+    <a href="/logout/">
+        <button>🚪 Logout</button>
+    </a>
+
+</div>
+
+</body>
+</html>
