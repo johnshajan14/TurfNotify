@@ -5,6 +5,7 @@
 
 <head>
     <title>TurfNotify - Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
         body {
@@ -47,16 +48,16 @@
         }
 
         .page-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-}
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
 
-@media (min-width: 900px) {
-    .page-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-}
+        @media (min-width: 900px) {
+            .page-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
 
         .section-card {
             background: white;
