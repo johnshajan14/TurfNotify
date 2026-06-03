@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.cache import never_cache  # ← ADD HERE
 from .models import Event
 from responses.models import Response
 
+@never_cache
 def create_event_view(request):
 
     if request.method == "POST":
@@ -20,7 +22,7 @@ def create_event_view(request):
 
     return render(request, 'create_event.html')
 
-
+@never_cache
 def event_detail_view(request, event_id):
 
     event = get_object_or_404(
@@ -115,42 +117,40 @@ def event_detail_view(request, event_id):
         }
     )
 
-
+@never_cache
 def edit_event_view(request, event_id):
 
-    event = get_object_or_404(
-        Event,
-        id=event_id
-    )
+    event = get_object_or_404(Event, id=event_id)
 
     if request.user != event.created_by:
         return redirect('/dashboard/')
 
     if request.method == "POST":
-
         event.title = request.POST['title']
         event.event_date = request.POST['event_date']
         event.event_time = request.POST['event_time']
         event.location = request.POST['location']
         event.max_players = request.POST['max_players']
-        event.announcement = request.POST.get(
-            'announcement',
-            ''
-        )
-
+        event.announcement = request.POST.get('announcement', '')
         event.save()
+
+        from chat.models import Announcement
+        announcement_text = request.POST.get('announcement', '').strip()
+        announcement_title = request.POST.get('announcement_title', '').strip()
+        if announcement_text:
+            Announcement.objects.update_or_create(
+                title=f"📅 New Event: {event.title}",
+                defaults={
+                    'title': announcement_title or f"📅 {event.title} - Update",
+                    'content': f"{announcement_text}\n\n📍 {event.location} | 🗓 {event.event_date} | ⏰ {event.event_time}"
+                }
+            )
 
         return redirect(f'/event/{event.id}/')
 
-    return render(
-        request,
-        'edit_event.html',
-        {
-            'event': event
-        }
-    )
+    return render(request, 'edit_event.html', {'event': event})
 
-
+@never_cache
 def delete_event_view(request, event_id):
 
     event = get_object_or_404(

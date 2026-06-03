@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.cache import never_cache  
 
-
+@never_cache
 def login_view(request):
+
+    error = None
 
     if request.method == "POST":
 
@@ -18,11 +21,13 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            return redirect('/dashboard/')
+            return redirect('/home/')
+        else:
+            error = "Invalid username or password. Please try again."
 
-    return render(request, 'login.html')
+    return render(request, 'login.html', {'error': error})
 
-
+@never_cache
 def register_view(request):
 
     if request.method == "POST":
@@ -41,7 +46,7 @@ def register_view(request):
 
     return render(request, 'register.html')
 
-
+@never_cache
 def dashboard_view(request):
 
     from events.models import Event
@@ -54,7 +59,7 @@ def dashboard_view(request):
         {'events': events}
     )
 
-
+@never_cache
 def logout_view(request):
     logout(request)
     return redirect('/')

@@ -6,170 +6,379 @@
 <head>
     <title>Event Details</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .event-header {
+            background: linear-gradient(135deg, #166534, #22c55e);
+            color: white;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+        }
+
+        .event-header h1 {
+            color: white;
+            margin: 0 0 12px 0;
+            font-size: 26px;
+        }
+
+        .event-header p {
+            margin: 6px 0;
+            font-size: 15px;
+            opacity: 0.95;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .stat-card .stat-number {
+            font-size: 22px;
+            font-weight: bold;
+            color: #166534;
+        }
+
+        .stat-card .stat-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .response-section {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .response-section h3 {
+            color: #166534;
+            margin: 0 0 18px 0;
+            font-size: 18px;
+        }
+
+        .response-buttons {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .btn-join {
+            flex: 1;
+            padding: 14px;
+            background: #22c55e;
+            color: white;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-join:hover, .btn-join.selected {
+            background: #16a34a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(34,197,94,0.3);
+        }
+
+        .btn-cantjoin {
+            flex: 1;
+            padding: 14px;
+            background: white;
+            color: #dc2626;
+            border: 2px solid #dc2626;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-cantjoin:hover, .btn-cantjoin.selected {
+            background: #fee2e2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220,38,38,0.2);
+        }
+
+        .reason-box {
+            display: none;
+            margin-top: 12px;
+        }
+
+        .reason-box textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 10px;
+            font-size: 14px;
+            box-sizing: border-box;
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: #166534;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 14px;
+            transition: 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: #14532d;
+            transform: translateY(-2px);
+        }
+
+        .player-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+        }
+
+        .player-name {
+            font-weight: 600;
+            color: #111827;
+            font-size: 15px;
+        }
+
+        .player-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-mark-paid {
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-mark-paid.unpaid {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .btn-mark-paid.paid {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .admin-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .btn-edit {
+            flex: 1;
+            padding: 11px;
+            background: #f0fdf4;
+            color: #166534;
+            border: 2px solid #22c55e;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .btn-edit:hover {
+            background: #dcfce7;
+        }
+
+        .btn-delete {
+            flex: 1;
+            padding: 11px;
+            background: #fff1f2;
+            color: #dc2626;
+            border: 2px solid #dc2626;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .btn-delete:hover {
+            background: #fee2e2;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #166534;
+            margin: 24px 0 14px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #dcfce7;
+        }
+    </style>
 </head>
 
 <body>
-
 <div class="login-container">
 
-    <h1>{{ event.title }}</h1>
+    <!-- Event Header -->
+    <div class="event-header">
+        <h1>⚽ {{ event.title }}</h1>
+        <p>📅 {{ event.event_date }} &nbsp;|&nbsp; ⏰ {{ event.event_time }}</p>
+        <p>📍 {{ event.location }}</p>
+        <p>👥 Max Players: {{ event.max_players }}</p>
+    </div>
 
-    <p><strong>Date:</strong> {{ event.event_date }}</p>
-
-    <p><strong>Time:</strong> {{ event.event_time }}</p>
-
-    <p><strong>Location:</strong> {{ event.location }}</p>
-
-    <p><strong>Maximum Players:</strong> {{ event.max_players }}</p>
-
+    <!-- Admin Buttons -->
     {% if request.user == event.created_by %}
-
-        <a href="/event/{{ event.id }}/edit/">
-            <button>
-                ✏️ Edit Event
-            </button>
-        </a>
-
-        <br><br>
-
-        <a href="/event/{{ event.id }}/delete/">
-            <button>
-                🗑 Delete Event
-            </button>
-        </a>
-
+    <div class="admin-buttons">
+        <a href="/event/{{ event.id }}/edit/" class="btn-edit">✏️ Edit Event</a>
+        <a href="/event/{{ event.id }}/delete/" class="btn-delete">🗑 Delete Event</a>
+    </div>
     {% endif %}
 
-    <hr>
-
-    <h2>📊 Match Statistics</h2>
-
-    <p>👥 Confirmed: {{ confirmed_count }} / {{ event.max_players }}</p>
-
-    <p>💰 Paid: {{ paid_count }}</p>
-
-    <p>💸 Unpaid: {{ unpaid_count }}</p>
-
-    <p>❌ Declined: {{ declined_count }}</p>
-
-    <p>⏳ Spots Left: {{ spots_left }}</p>
+    <!-- Match Statistics -->
+    <div class="section-title">📊 Match Statistics</div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">{{ confirmed_count }}/{{ event.max_players }}</div>
+            <div class="stat-label">👥 Confirmed</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ paid_count }}</div>
+            <div class="stat-label">💰 Paid</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ unpaid_count }}</div>
+            <div class="stat-label">💸 Unpaid</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ declined_count }}</div>
+            <div class="stat-label">❌ Declined</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ spots_left }}</div>
+            <div class="stat-label">⏳ Spots Left</div>
+        </div>
+    </div>
 
     {% if is_full %}
-        <div class="match-full">
-            🔒 MATCH FULL
-        </div>
+    <div class="match-full">🔒 MATCH FULL — No more spots available!</div>
     {% endif %}
 
-    <hr>
-
+    <!-- Response Section -->
     {% if not is_full %}
+    <div class="response-section">
+        <h3>🏃 Are you joining?</h3>
+        <form method="POST" id="responseForm">
+            {% csrf_token %}
+            <input type="hidden" name="response" id="responseValue" value="">
 
-    <form method="POST">
+            <div class="response-buttons">
+                <button type="button" class="btn-join" onclick="selectResponse('YES')">
+                    ✅ Join
+                </button>
+                <button type="button" class="btn-cantjoin" onclick="selectResponse('NO')">
+                    ❌ Can't Join
+                </button>
+            </div>
 
-        {% csrf_token %}
+            <div class="reason-box" id="reasonBox">
+                <textarea name="reason" placeholder="Let the organizer know why you can't join..."></textarea>
+            </div>
 
-        <label>
-            <input type="radio" name="response" value="YES">
-            YES
-        </label>
-
-        <br><br>
-
-        <label>
-            <input type="radio" name="response" value="NO">
-            NO
-        </label>
-
-        <br><br>
-
-        <textarea
-            name="reason"
-            placeholder="Reason if NO"></textarea>
-
-        <br><br>
-
-        <button type="submit">
-            Submit Response
-        </button>
-
-    </form>
-
+            <button type="submit" class="btn-submit">Submit Response</button>
+        </form>
+    </div>
     {% else %}
-
-        <p><strong>No more player slots available.</strong></p>
-
+    <p><strong>No more player slots available.</strong></p>
     {% endif %}
 
-    <hr>
-
-    <h2>Confirmed Players</h2>
-
+    <!-- Confirmed Players -->
+    <div class="section-title">✅ Confirmed Players</div>
     {% for player in confirmed_players %}
-
-        <p>
-            ✅ {{ player.user.username }}
-
+    <div class="player-card">
+        <div class="player-name">👤 {{ player.user.username }}</div>
+        <div class="player-actions">
             {% if player.is_paid %}
-                🟢 PAID
+                <span class="badge-paid">💚 PAID</span>
             {% else %}
-                🔴 UNPAID
+                <span class="badge-unpaid">🔴 UNPAID</span>
             {% endif %}
-        </p>
 
-        {% if request.user == event.created_by %}
-
+            {% if request.user == event.created_by %}
             <form method="POST">
-
                 {% csrf_token %}
-
-                <input
-                    type="hidden"
-                    name="payment_response_id"
-                    value="{{ player.id }}">
-
-                <button type="submit">
-
-                    {% if player.is_paid %}
-                        Mark Unpaid
-                    {% else %}
-                        Mark Paid
-                    {% endif %}
-
+                <input type="hidden" name="payment_response_id" value="{{ player.id }}">
+                <button type="submit" class="btn-mark-paid {% if player.is_paid %}paid{% else %}unpaid{% endif %}">
+                    {% if player.is_paid %}Mark Unpaid{% else %}Mark Paid{% endif %}
                 </button>
-
             </form>
-
-        {% endif %}
-
-        <br>
-
+            {% endif %}
+        </div>
+    </div>
     {% empty %}
-
-        <p>No confirmed players yet.</p>
-
+    <p style="color:#6b7280;">No confirmed players yet.</p>
     {% endfor %}
 
-    <hr>
-
-    <h2>Declined Players</h2>
-
+    <!-- Declined Players -->
+    <div class="section-title">❌ Declined Players</div>
     {% for player in declined_players %}
-
-        <p>❌ {{ player.user.username }}</p>
-
-        <p>Reason: {{ player.reason }}</p>
-
-        <br>
-
+    <div class="player-card">
+        <div>
+            <div class="player-name">👤 {{ player.user.username }}</div>
+            <div style="font-size:13px; color:#6b7280; margin-top:4px;">{{ player.reason }}</div>
+        </div>
+    </div>
     {% empty %}
-
-        <p>No declined players.</p>
-
+    <p style="color:#6b7280;">No declined players.</p>
     {% endfor %}
 
 </div>
 
+<script>
+    function selectResponse(value) {
+        document.getElementById('responseValue').value = value;
+        const reasonBox = document.getElementById('reasonBox');
+        const joinBtn = document.querySelector('.btn-join');
+        const cantBtn = document.querySelector('.btn-cantjoin');
+
+        if (value === 'NO') {
+            reasonBox.style.display = 'block';
+            cantBtn.style.background = '#fee2e2';
+            joinBtn.style.background = '#22c55e';
+        } else {
+            reasonBox.style.display = 'none';
+            joinBtn.style.background = '#16a34a';
+            cantBtn.style.background = 'white';
+        }
+    }
+</script>
+
 </body>
-
 </html>
-

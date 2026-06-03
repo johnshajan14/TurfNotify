@@ -6,45 +6,178 @@
 <head>
     <title>Edit Event</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            background: linear-gradient(135deg, #166534, #22c55e);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 520px;
+            background: white;
+            padding: 36px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            color: #166534;
+            font-size: 26px;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #6b7280;
+            font-size: 14px;
+            margin-top: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 10px;
+            font-size: 14px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #22c55e;
+            box-shadow: 0 0 0 3px rgba(34,197,94,0.15);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .section-divider {
+            font-size: 13px;
+            font-weight: 700;
+            color: #166534;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 8px 14px;
+            margin: 20px 0 16px 0;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: #22c55e;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: #16a34a;
+            transform: translateY(-2px);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 13px;
+        }
+
+        .back-link a {
+            color: #16a34a;
+            font-weight: 600;
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
-
 <div class="login-container">
 
-    <h1>✏️ Edit Event</h1>
+    <div class="page-header">
+        <h1>✏️ Edit Event</h1>
+        <p>Update your event details</p>
+    </div>
 
     <form method="POST">
-
         {% csrf_token %}
 
-        <input type="text" name="title" value="{{ event.title }}">
+        <div class="section-divider">📋 Event Details</div>
 
-        <br><br>
+        <div class="form-group">
+            <label>Match Title</label>
+            <input type="text" name="title" value="{{ event.title }}" required />
+        </div>
 
-        <input type="date" name="event_date" value="{{ event.event_date|date:'Y-m-d' }}">
+        <div class="form-group">
+            <label>Date</label>
+            <input type="date" name="event_date" value="{{ event.event_date|date:'Y-m-d' }}" required />
+        </div>
 
-        <br><br>
+        <div class="form-group">
+            <label>Time</label>
+            <input type="time" name="event_time" value="{{ event.event_time|time:'H:i' }}" required />
+        </div>
 
-        <input type="time" name="event_time" value="{{ event.event_time|time:'H:i' }}">
+        <div class="form-group">
+            <label>Location</label>
+            <input type="text" name="location" value="{{ event.location }}" required />
+        </div>
 
-        <br><br>
+        <div class="form-group">
+            <label>Maximum Players</label>
+            <input type="number" name="max_players" value="{{ event.max_players }}" min="2" required />
+        </div>
 
-        <input type="text" name="location" value="{{ event.location }}">
+        <div class="section-divider">📢 Announcement</div>
 
-        <br><br>
+        <div class="form-group">
+            <label>Announcement Message</label>
+            <textarea name="announcement" placeholder="Update your announcement...">{{ event.announcement }}</textarea>
+        </div>
 
-        <input type="number" name="max_players" value="{{ event.max_players }}">
+        <div class="form-group">
+            <label>Announcement Title</label>
+            <input type="text" name="announcement_title" value="{{ event.title }} - Update" placeholder="Announcement title" />
+        </div>
 
-        <br><br>
-
-        <button type="submit">
-            Save Changes
-        </button>
-
+        <button type="submit" class="btn-submit">💾 Save Changes</button>
     </form>
 
-</div>
+    <div class="back-link">
+        <a href="/event/{{ event.id }}/">← Back to Event</a>
+    </div>
 
+</div>
 </body>
 </html>

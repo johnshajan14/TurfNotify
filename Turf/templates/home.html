@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+
+{% load static %}
+
+<head>
+    <title>TurfNotify - Home</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            background: #f0fdf4;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #166534, #22c55e);
+            padding: 14px 24px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .navbar h2 {
+            color: white;
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .navbar-links a {
+            color: white;
+            margin-left: 16px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            background: rgba(255,255,255,0.2);
+            padding: 7px 14px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .navbar-links a:hover {
+            background: rgba(255,255,255,0.35);
+        }
+
+        .page-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .page-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #166534;
+            margin: 0 0 16px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dcfce7;
+        }
+
+        .announcement-card {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+
+        .announcement-card h4 {
+            color: #166534;
+            margin: 0 0 6px 0;
+            font-size: 15px;
+        }
+
+        .announcement-card p {
+            color: #374151;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .announcement-card .time {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 6px;
+        }
+
+        .chat-box {
+            height: 340px;
+            overflow-y: auto;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-message {
+            max-width: 80%;
+        }
+
+        .chat-message.mine {
+            align-self: flex-end;
+        }
+
+        .chat-message.others {
+            align-self: flex-start;
+        }
+
+        .chat-bubble {
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .chat-message.mine .chat-bubble {
+            background: #22c55e;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-message.others .chat-bubble {
+            background: #e5e7eb;
+            color: #111827;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-meta {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 3px;
+            padding: 0 4px;
+        }
+
+        .chat-input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-row input {
+            flex: 1;
+            padding: 11px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .chat-input-row input:focus {
+            border-color: #22c55e;
+        }
+
+        .chat-input-row button {
+            padding: 11px 18px;
+            background: #22c55e;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            width: auto;
+        }
+
+        .chat-input-row button:hover {
+            background: #16a34a;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-size: 14px;
+            text-align: center;
+            padding: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <h2>⚽ TurfNotify</h2>
+        <div class="navbar-links">
+            <a href="/home/">🏠 Home</a>
+            <a href="/dashboard/">📅 Events</a>
+            <a href="/logout/">🚪 Logout</a>
+        </div>
+    </div>
+
+    <div class="page-grid">
+
+        <!-- Announcements -->
+<div class="section-card">
+    <div class="section-title">
+        📢 Announcements
+        {% if is_event_creator %}
+        <a href="/announcement/create/" style="float:right; font-size:13px; background:#22c55e; color:white; padding:5px 12px; border-radius:8px; text-decoration:none;">+ New</a>
+        {% endif %}
+    </div>
+
+    {% for announcement in announcements %}
+    <div class="announcement-card">
+        <h4>{{ announcement.title }}</h4>
+        <p>{{ announcement.content }}</p>
+        <div class="time">🕒 {{ announcement.created_at|date:"M d, Y - h:i A" }}
+            {% if is_event_creator %}
+            &nbsp;·&nbsp;
+            <a href="/announcement/edit/{{ announcement.id }}/" style="color:#16a34a;">Edit</a>
+            &nbsp;·&nbsp;
+            <a href="/announcement/delete/{{ announcement.id }}/" style="color:#dc2626;">Delete</a>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <div class="no-data">No announcements yet.</div>
+    {% endfor %}
+</div>
+
+        <!-- Chat Box -->
+        <div class="section-card">
+            <div class="section-title">💬 Team Chat</div>
+
+            <div class="chat-box" id="chatBox">
+                {% for msg in messages %}
+                <div class="chat-message {% if msg.user == request.user %}mine{% else %}others{% endif %}">
+                    <div class="chat-bubble">{{ msg.content }}</div>
+                    <div class="chat-meta">
+                        {% if msg.user != request.user %}{{ msg.user.username }} · {% endif %}
+                        {{ msg.created_at|date:"h:i A" }}
+                    </div>
+                </div>
+                {% empty %}
+                <div class="no-data">No messages yet. Say hello! 👋</div>
+                {% endfor %}
+            </div>
+
+            <form method="POST" action="/send-message/" id="chatForm">
+                {% csrf_token %}
+                <div class="chat-input-row">
+                    <input type="text" name="content" id="chatInput" placeholder="Type a message..." autocomplete="off" />
+                    <button type="submit">Send</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        // Scroll chat to bottom
+        const chatBox = document.getElementById('chatBox');
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Auto refresh messages every 5 seconds
+        setInterval(async () => {
+            const res = await fetch('/get-messages/');
+            const data = await res.json();
+            const currentUser = "{{ request.user.username }}";
+
+            chatBox.innerHTML = '';
+            data.messages.forEach(msg => {
+                const isMine = msg.user === currentUser;
+                chatBox.innerHTML += `
+                    <div class="chat-message ${isMine ? 'mine' : 'others'}">
+                        <div class="chat-bubble">${msg.content}</div>
+                        <div class="chat-meta">${!isMine ? msg.user + ' · ' : ''}${msg.time}</div>
+                    </div>
+                `;
+            });
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }, 5000);
+    </script>
+
+</body>
+</html>
